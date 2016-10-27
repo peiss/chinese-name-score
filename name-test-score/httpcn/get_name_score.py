@@ -65,16 +65,36 @@ def get_name_score(name):
     return result_data
 
 
-if __name__=="__main__":
-    fout = open("output_result.txt", "w")
-    for line in open("input_names.txt"):
+if __name__ == "__main__":
+    
+    fname_input_name = "data/names_han_input.txt"
+    fname_output_name = fname_input_name.replace("input", "output")
+    
+    fout = open(fname_output_name, "w")
+    all_input_names = set()
+    
+    for line in open(fname_input_name):
         name = line[:-1]
         if len(name) == 4:
             print "不需要处理：" + name
             continue
-        print "处理中：" + name
+        
+        all_input_names.add(name)
+   
+    total_count = len(all_input_names)
+    print '总共需要处理名字个数：%d' % total_count
+    
+    idx = 1    
+    for name in all_input_names:
+        print "处理中：%d/%d, %s" % (idx, total_count, name)
         name_data = get_name_score(name)
-        print "\t姓名八字评分=" + name_data['bazi_score'] + "\t姓名五格评分=" + name_data['wuge_score']
-        fout.write(name_data['name'] + "\t" + name_data['bazi_score'] + "\t" + name_data['wuge_score'] + "\n")
-    fout.flush()
+        
+        total_score = str(float(name_data['bazi_score']) + float(name_data['wuge_score']))
+        
+        print "\t姓名八字评分=" + name_data['bazi_score'] + "\t姓名五格评分=" + name_data['wuge_score'] + "\t总分=" + total_score
+        fout.write(name_data['name'] + "\t" + name_data['bazi_score'] + "\t" + name_data['wuge_score'] + "\t" + total_score + "\n")
+        fout.flush()
+        
+        idx += 1
+    
     fout.close()
