@@ -60,14 +60,17 @@ def get_name_score(name):
         if u'姓名八字评分' in node_cont:
             name_wuge = node.find(string=re.compile(u"姓名八字评分"))
             result_data['bazi_score'] = name_wuge.next_sibling.b.get_text()
-        
+    
+    if 'wuge_score' not in result_data or 'bazi_score' not in result_data:
+        return None
+    
     result_data['name'] = name
     return result_data
 
 
 if __name__ == "__main__":
     
-    fname_input_name = "data/names_han_input.txt"
+    fname_input_name = "data/names_ran2_input.txt"
     fname_output_name = fname_input_name.replace("input", "output")
     
     fout = open(fname_output_name, "w")
@@ -88,6 +91,9 @@ if __name__ == "__main__":
     for name in all_input_names:
         print "处理中：%d/%d, %s" % (idx, total_count, name)
         name_data = get_name_score(name)
+        
+        if name_data is None:
+            continue
         
         total_score = str(float(name_data['bazi_score']) + float(name_data['wuge_score']))
         
