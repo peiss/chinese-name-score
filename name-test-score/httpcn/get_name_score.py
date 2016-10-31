@@ -13,7 +13,6 @@ from bs4 import BeautifulSoup
 import re
 import sys 
 
-
 reload(sys) 
 sys.setdefaultencoding("GB18030")
 
@@ -36,8 +35,8 @@ def get_name_score(name):
     params['wxxy'] = "0"
     params['xishen'] = "水"
     params['yongshen'] = "水"
-    params['xing'] = name[:2]  # "裴"
-    params['ming'] = name[2:]  # "云林"
+    params['xing'] = name[:2]  # 姓
+    params['ming'] = name[2:]  # 名字
     params['sex'] = "1"
     params['act'] = "submit"
     params['isbz'] = "1"
