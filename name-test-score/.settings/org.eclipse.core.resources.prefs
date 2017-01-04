@@ -1,3 +1,4 @@
 eclipse.preferences.version=1
+encoding//httpcn/config.py=GB18030
 encoding//httpcn/get_name_score.py=GB18030
-encoding//httpcn/test.py=utf8
+encoding//httpcn/unique_names.py=GB18030

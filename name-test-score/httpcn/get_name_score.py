@@ -13,31 +13,41 @@ from bs4 import BeautifulSoup
 import re
 import sys 
 
+import config
+
 reload(sys) 
 sys.setdefaultencoding("GB18030")
 
 # 请求的表单地址
 REQUEST_URL = "http://life.httpcn.com/xingming.asp"
 
-def get_name_score(name):
+def get_name_score(name_postfix):
+    """调用接口，执行计算，返回结果
+    """
     result_data = {}
     
     params = {}
     
+    # 日期类型，0表示公历，1表示农历
     params['data_type'] = "0"
-    params['year'] = "2016"
-    params['month'] = "10"
-    params['day'] = "18"
-    params['hour'] = "8"
-    params['minute'] = "38"
-    params['pid'] = "北京"
-    params['cid'] = "海淀"
+    params['year'] = "%s" % str(config.setting["year"])
+    params['month'] = "%s" % str(config.setting["month"])
+    params['day'] = "%s" % str(config.setting["day"])
+    params['hour'] = "%s" % str(config.setting["hour"])
+    params['minute'] = "%s" % str(config.setting["minute"])
+    params['pid'] = "%s" % str(config.setting["area_province"])
+    params['cid'] = "%s" % str(config.setting["area_region"])
+    # 喜用五行，0表示自动分析，1表示自定喜用神
     params['wxxy'] = "0"
-    params['xishen'] = "水"
-    params['yongshen'] = "水"
-    params['xing'] = name[:2]  # 姓
-    params['ming'] = name[2:]  # 名字
-    params['sex'] = "1"
+    params['xing'] = "%s" % (config.setting["name_prefix"])
+    params['ming'] = name_postfix
+    # 表示女，1表示男
+    if config.setting["sex"] == "男":
+        params['sex'] = "1"
+    else:
+        params['sex'] = "0"
+        
+    
     params['act'] = "submit"
     params['isbz'] = "1"
     
@@ -59,47 +69,45 @@ def get_name_score(name):
         if u'姓名八字评分' in node_cont:
             name_wuge = node.find(string=re.compile(u"姓名八字评分"))
             result_data['bazi_score'] = name_wuge.next_sibling.b.get_text()
-    
-    if 'wuge_score' not in result_data or 'bazi_score' not in result_data:
-        return None
-    
-    result_data['name'] = name
+        
+    result_data['name_postfix'] = name_postfix
     return result_data
 
+def get_full_name(name):
+    return "%s%s" % ((config.setting["name_prefix"]), name)
+
+def process(input_fpath, output_fpath):
+    fout = open(output_fpath, "w")
+    
+    
+    all_name_postfixs = set()
+    for line in open(input_fpath):
+        name_postfix = str(line).strip()
+        
+        if name_postfix is None or len(name_postfix) == 0:
+            continue
+        
+        all_name_postfixs.add(name_postfix)
+        
+    cur_idx = 0
+    all_count = len(all_name_postfixs)
+    for name_postfix in all_name_postfixs:
+        cur_idx += 1
+        
+        full_name = get_full_name(name_postfix)
+        print "处理中 %d/%d: %s" % (cur_idx, all_count, full_name),
+        
+        # 以名字的后缀作为参数进行计算
+        name_data = get_name_score(name_postfix)
+        
+        print "\t姓名八字评分=" + name_data['bazi_score'] + "\t姓名五格评分=" + name_data['wuge_score']
+        fout.write(full_name + "\t" + name_data['bazi_score'] + "\t" + name_data['wuge_score'] + "\n")
+
+        fout.flush()
+    fout.close()
 
 if __name__ == "__main__":
-    
-    fname_input_name = "data/names_ran2_input.txt"
-    fname_output_name = fname_input_name.replace("input", "output")
-    
-    fout = open(fname_output_name, "w")
-    all_input_names = set()
-    
-    for line in open(fname_input_name):
-        name = line[:-1]
-        if len(name) == 4:
-            print "不需要处理：" + name
-            continue
-        
-        all_input_names.add(name)
-   
-    total_count = len(all_input_names)
-    print '总共需要处理名字个数：%d' % total_count
-    
-    idx = 1    
-    for name in all_input_names:
-        print "处理中：%d/%d, %s" % (idx, total_count, name)
-        name_data = get_name_score(name)
-        
-        if name_data is None:
-            continue
-        
-        total_score = str(float(name_data['bazi_score']) + float(name_data['wuge_score']))
-        
-        print "\t姓名八字评分=" + name_data['bazi_score'] + "\t姓名五格评分=" + name_data['wuge_score'] + "\t总分=" + total_score
-        fout.write(name_data['name'] + "\t" + name_data['bazi_score'] + "\t" + name_data['wuge_score'] + "\t" + total_score + "\n")
-        fout.flush()
-        
-        idx += 1
-    
-    fout.close()
+    print "begin................................"
+    process(config.setting["input_fpath"], config.setting["output_fpath"])
+    print "over................................"
+
