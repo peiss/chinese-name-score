@@ -59,6 +59,8 @@ def get_name_score(name_postfix):
     
     soup = BeautifulSoup(content, 'html.parser', from_encoding="GB18030")
     
+    full_name = get_full_name(name_postfix)
+    
     # print soup.find(string=re.compile(u"姓名五格评分"))
     for node in soup.find_all("div", class_="chaxun_b"):
         node_cont = node.get_text()
@@ -70,7 +72,7 @@ def get_name_score(name_postfix):
             name_wuge = node.find(string=re.compile(u"姓名八字评分"))
             result_data['bazi_score'] = name_wuge.next_sibling.b.get_text()
         
-    result_data['name_postfix'] = name_postfix
+    result_data['full_name'] = full_name
     return result_data
 
 def get_full_name(name):
@@ -87,21 +89,22 @@ def process(input_fpath, output_fpath):
         if name_postfix is None or len(name_postfix) == 0:
             continue
         
-        all_name_postfixs.add(name_postfix)
+        name_postfix_full = "%s%s" % (config.setting["middle_world"], name_postfix)
+        
+        all_name_postfixs.add(name_postfix_full)
         
     cur_idx = 0
     all_count = len(all_name_postfixs)
     for name_postfix in all_name_postfixs:
         cur_idx += 1
-        
-        full_name = get_full_name(name_postfix)
-        print "处理中 %d/%d: %s" % (cur_idx, all_count, full_name),
-        
+                
         # 以名字的后缀作为参数进行计算
         name_data = get_name_score(name_postfix)
         
-        print "\t姓名八字评分=" + name_data['bazi_score'] + "\t姓名五格评分=" + name_data['wuge_score']
-        fout.write(full_name + "\t" + name_data['bazi_score'] + "\t" + name_data['wuge_score'] + "\n")
+        print "%d/%d" % (cur_idx, all_count),
+        print name_data['full_name'] + "\t姓名八字评分=" + name_data['bazi_score'] + "\t姓名五格评分=" + name_data['wuge_score']
+        
+        fout.write(name_data['full_name'] + "\t" + name_data['bazi_score'] + "\t" + name_data['wuge_score'] + "\n")
 
         fout.flush()
     fout.close()

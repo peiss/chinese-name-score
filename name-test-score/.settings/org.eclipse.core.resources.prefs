@@ -1,4 +1,6 @@
 eclipse.preferences.version=1
 encoding//httpcn/config.py=GB18030
+encoding//httpcn/dicts/names_girls_source.txt=GB18030
+encoding//httpcn/filter.py=utf8
 encoding//httpcn/get_name_score.py=GB18030
 encoding//httpcn/unique_names.py=GB18030
