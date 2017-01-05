@@ -4,7 +4,7 @@
 
 ## 运行方式：
 1. 在/chinese-name-score/main/user_config.py进行运行配置
-2、执行脚本：/chinese-name-score/main/get_name_score.py
+2. 执行脚本：/chinese-name-score/main/get_name_score.py
 
 
 ## 代码依赖的Python模块：
