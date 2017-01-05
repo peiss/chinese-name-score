@@ -6,7 +6,7 @@
 """
 
 # 请求的表单地址
-REQUEST_URL = "http://life.main.com/xingming.asp"
+REQUEST_URL = "http://life.httpcn.com/xingming.asp"
 
 
 # 词典文件路径：男孩，双字名

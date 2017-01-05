@@ -82,6 +82,9 @@ def compute_name_score(name_postfix):
     params['act'] = "submit"
     params['isbz'] = "1"
     
+    #for k, v in params.items():
+    #    print k, v
+    
     post_data = urllib.urlencode(params)
     req = urllib2.urlopen(sys_config.REQUEST_URL, post_data)
     content = req.read()
@@ -105,8 +108,8 @@ def compute_name_score(name_postfix):
     return result_data
 
 
-def get_full_name(name):
-    return "%s%s" % ((user_config.setting["name_prefix"]), name)
+def get_full_name(name_postfix):
+    return "%s%s" % ((user_config.setting["name_prefix"]), name_postfix)
 
 
 def process(output_fpath):
@@ -139,9 +142,9 @@ def process(output_fpath):
                          ))
         
         fout.write(name_data['full_name'] + "\t" 
-                   + name_data['bazi_score'] + "\t" 
-                   + name_data['wuge_score'] + "\t" 
-                   + name_data['total_score'] + "\n")
+                   + str(name_data['bazi_score']) + "\t" 
+                   + str(name_data['wuge_score']) + "\t" 
+                   + str(name_data['total_score']) + "\n")
 
     fout.flush()
     fout.close()
