@@ -1,12 +1,27 @@
-# coding:utf8
+# coding:GBK
 
 import os
+import sys
 
-dirpath = "C:/Users/pss/git/name-test-score/name-test-score/main/data"
-all_count = 0
+reload(sys) 
+sys.setdefaultencoding("GB18030")
+
+dirpath = "D:\\workbench\\chinese-name-score\\name-test-score\\main\\data"
+
+fout = open("../dicts/names_boys_double.txt", "w")
+
+all_names = set()
 for fname in os.listdir(dirpath):
-    if 'input' in fname:
+    if 'txt' in fname:
         for line in open(dirpath + "/" + fname):
-            all_count += 1
+            name = str(line).strip()
+            clear_name = name.replace(u"≈·", u"")
+            if not clear_name or len(clear_name) == 0:
+                continue
+            all_names.add(clear_name)
             
-print all_count
+for name in all_names:
+    fout.write(name + "\n")
+            
+fout.flush()
+fout.close()
