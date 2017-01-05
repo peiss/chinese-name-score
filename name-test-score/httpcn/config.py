@@ -30,7 +30,7 @@ setting['hour'] = "5"
 setting['minute'] = "52"
 
 # 种子文件输入地址
-setting['input_fpath'] = "./dicts/names_girls_single_words.txt"
+setting['input_fpath'] = "./dicts/names_girls_single_words_formal.txt"
 # 结果产出文件地址
 setting['output_fpath'] = "./outputs/names_girls_source_wxy.txt"
 

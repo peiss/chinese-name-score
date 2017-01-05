@@ -1,14 +1,13 @@
 # coding:GB18030
 
-fin = open("./datas/names_girls_source.txt")
-fout = open("./datas/names_grils_formal.txt", "w")
+fin = open("./dicts/names_girls_single_words_source.txt")
+fout = open("./dicts/names_girls_single_words_formal.txt", "w")
 
 
 names = set()
 for line in fin:
     line = str(line).strip()
-    if len(line) == 2:
-        # print line
+    if len(line) == 0 :
         continue
     names.add(line)
 

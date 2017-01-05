@@ -97,16 +97,20 @@ def process(input_fpath, output_fpath):
     all_count = len(all_name_postfixs)
     for name_postfix in all_name_postfixs:
         cur_idx += 1
-                
-        # 以名字的后缀作为参数进行计算
-        name_data = get_name_score(name_postfix)
+        
+        try:
+            # 以名字的后缀作为参数进行计算
+            name_data = get_name_score(name_postfix)
+        except Exception as e:
+            print "error:", name_postfix, e
+            continue
         
         print "%d/%d" % (cur_idx, all_count),
         print name_data['full_name'] + "\t姓名八字评分=" + name_data['bazi_score'] + "\t姓名五格评分=" + name_data['wuge_score']
         
         fout.write(name_data['full_name'] + "\t" + name_data['bazi_score'] + "\t" + name_data['wuge_score'] + "\n")
 
-        fout.flush()
+    fout.flush()
     fout.close()
 
 if __name__ == "__main__":
