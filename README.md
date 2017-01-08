@@ -4,6 +4,8 @@
 
 ## 运行方式：
 *注意，由于目标网站的编码是GB18030，所以本项目的代码也是GB18030，在导入到pychar时默认是UTF8编码，需要先修改一下*
+
+
 1. 在/chinese-name-score/main/user_config.py进行运行配置
 2. 执行脚本：/chinese-name-score/main/get_name_score.py
 
