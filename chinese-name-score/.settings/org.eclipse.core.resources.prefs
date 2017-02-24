@@ -1,5 +1,6 @@
 eclipse.preferences.version=1
 encoding//main/get_name_score.py=GB18030
+encoding//main/scripts/filter.py=GBK
 encoding//main/scripts/test.py=GBK
 encoding//main/scripts/unique_file_lines.py=GB18030
 encoding//main/sys_config.py=GB18030

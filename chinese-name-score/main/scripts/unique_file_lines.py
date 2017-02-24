@@ -5,7 +5,7 @@
 """
 import os
 
-fpath_source = "../dicts/names_grils_double.txt"
+fpath_source = "../dicts/names_boys_single.txt"
 
 fpath_tmp = "%s_tmp" % fpath_source
 
