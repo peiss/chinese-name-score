@@ -36,10 +36,11 @@ def get_name_postfixs():
             fpath_input = sys_config.FPATH_DICTFILE_BOYS_SINGLE
         elif user_config.setting["sex"] == "Å®":
             fpath_input = sys_config.FPATH_DICTFILE_GIRLS_SINGLE
-
-        for line in open(sys_config.FPATH_DICTFILE_BOYS_SINGLE):
+        
+        print "has limit word, fpath=%s" % fpath_input
+        
+        for line in open(fpath_input):
                 iter_name = str(line).strip()
-                target_name_postfixs.add("%s%s" % (iter_name, limit_word))
                 target_name_postfixs.add("%s%s" % (limit_word, iter_name))
     else:
         if user_config.setting["sex"] == "ÄÐ":
@@ -82,7 +83,7 @@ def compute_name_score(name_postfix):
     params['act'] = "submit"
     params['isbz'] = "1"
     
-    #for k, v in params.items():
+    # for k, v in params.items():
     #    print k, v
     
     post_data = urllib.urlencode(params)
