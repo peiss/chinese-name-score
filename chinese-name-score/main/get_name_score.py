@@ -6,19 +6,26 @@
 Created on 2016年10月23日
 
 @author: crazyant.net
-"""
+""" 
 
-import urllib
-import urllib2
-from bs4 import BeautifulSoup
+import urllib 
+import urllib2 
+from bs4 import BeautifulSoup 
 import re
 import sys 
+import threading
+import time 
+import threadpool
 
 from main import user_config
 from main import sys_config
 
 reload(sys) 
 sys.setdefaultencoding("GB18030")
+
+curr_idx = 0
+all_count = 0
+fout = None
 
 def get_name_postfixs():
     """根据是否使用单字和用户配置的性别参数，获取所有的名字列表
@@ -107,45 +114,53 @@ def compute_name_score(name_postfix):
     result_data['total_score'] = float(result_data['wuge_score']) + float(result_data['bazi_score'])
     result_data['full_name'] = full_name
     return result_data
+    
 
+def compute_and_writefile(name_postfix):
+    try:
+        global fout
+        name_data = compute_name_score(name_postfix)
+        write_to_file(fout, name_data)
+    except Exception as e:
+        print 'error, ', e, name_postfix
 
 def get_full_name(name_postfix):
     return "%s%s" % ((user_config.setting["name_prefix"]), name_postfix)
 
 
+lock = threading.Lock()
+def write_to_file(fout, name_data):
+    lock.acquire()
+    global curr_idx, all_count
+    curr_idx += 1
+    print "%d/%d" % (curr_idx, all_count),
+    print "\t".join((name_data['full_name'],
+                     "姓名八字评分=" + str(name_data['bazi_score']),
+                     "姓名五格评分=" + str(name_data['wuge_score']),
+                     "总分=" + str(name_data['total_score'])
+                     ))
+    fout.write(name_data['full_name'] + "\t" 
+               + str(name_data['bazi_score']) + "\t" 
+               + str(name_data['wuge_score']) + "\t" 
+               + str(name_data['total_score']) + "\n")
+    lock.release()
+
 def process(output_fpath):
     """计算并且将结果输出到文件
     """
-    
+    global fout
     # 输出文件路径
     fout = open(output_fpath, "w")
-    
     # 获得所有可用的名字列表
     all_name_postfixs = get_name_postfixs()
-        
-    cur_idx = 0
+    
+    global all_count
     all_count = len(all_name_postfixs)
-    for name_postfix in all_name_postfixs:
-        cur_idx += 1
-        
-        try:
-            # 以名字的后缀作为参数进行计算
-            name_data = compute_name_score(name_postfix)
-        except Exception as e:
-            print "error:", name_postfix, e
-            continue
-        
-        print "%d/%d" % (cur_idx, all_count),
-        print "\t".join((name_data['full_name'],
-                         "姓名八字评分=" + str(name_data['bazi_score']),
-                         "姓名五格评分=" + str(name_data['wuge_score']),
-                         "总分=" + str(name_data['total_score'])
-                         ))
-        
-        fout.write(name_data['full_name'] + "\t" 
-                   + str(name_data['bazi_score']) + "\t" 
-                   + str(name_data['wuge_score']) + "\t" 
-                   + str(name_data['total_score']) + "\n")
+     
+    pool = threadpool.ThreadPool(50) 
+    requests = threadpool.makeRequests(compute_and_writefile, all_name_postfixs) 
+    [pool.putRequest(req) for req in requests] 
+    pool.wait()  
 
     fout.flush()
     fout.close()
