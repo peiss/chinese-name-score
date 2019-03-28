@@ -1,5 +1,7 @@
 # chinese-name-score
 
+## 大家好，新增加Python3的简化版本，地址在：本代码的chinese-name-score/chinese-name-score/python3/
+
 中文自动起名打分程序。
 
 ### 如果大家对程序不感兴趣，只想得到宝宝名称列表，可以QQ联系我693609645，收费60元（如果觉得贵就算了，我没时间搞这个^_^）
