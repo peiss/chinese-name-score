@@ -1,11 +1,11 @@
 # chinese-name-score
 
-#### 大家好，新增加Python3的简化版本，地址在：本代码的chinese-name-score/chinese-name-score/python3/
+### 大家好，新增加Python3的简化版本，地址在：本代码的chinese-name-score/chinese-name-score/python3/
 链接为：https://github.com/peiss/chinese-name-score/tree/master/chinese-name-score/python3
 
-中文自动起名打分程序。
 
-### 如果大家对程序不感兴趣，只想得到宝宝名称列表，可以QQ联系我693609645，收费60元（如果觉得贵就算了，我没时间搞这个^_^）
+### 以下为python2的默认版本的说明
+中文自动起名打分程序。
 
 ## 运行方式：
 *注意，由于目标网站的编码是GB18030，所以本项目的代码也是GB18030，在导入到pychar时默认是UTF8编码，需要先修改一下*
