@@ -1,6 +1,7 @@
 # chinese-name-score
 
 #### 大家好，新增加Python3的简化版本，地址在：本代码的chinese-name-score/chinese-name-score/python3/
+链接为：https://github.com/peiss/chinese-name-score/tree/master/chinese-name-score/python3
 
 中文自动起名打分程序。
 
